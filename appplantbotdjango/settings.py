@@ -28,7 +28,15 @@ SECRET_KEY = 'django-insecure-q4jg951onuhpq_osta3-zl=m51_!phv#e^xp0=g2x8o*xcg4(6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# telegram
+TG_API_TOKEN = os.environ.get("TG_API_TOKEN")
+if not TG_API_TOKEN:
+    logger.warning("TG_API_TOKEN must be set as environment var. Otherwise, app would not work!")
+HOSTNAME = os.environ.get("HOSTNAME")
+
+ALLOWED_HOSTS = [
+    HOSTNAME,
+]
 
 # Application definition
 
@@ -127,23 +135,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# rest_framework
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': (
-#         'rest_framework_simplejwt.authentication.JWTAuthentication',
-#     ),
-#     'DEFAULT_PERMISSION_CLASSES': (
-#         'rest_framework.permissions.IsAuthenticated',
-#     ),
-# }
-
 SIMPLE_JWT = {
      'ACCESS_TOKEN_LIFETIME': datetime.timedelta(hours=24),
      'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=15),
 }
-
-# telegram
-TG_API_TOKEN = os.environ.get("TG_API_TOKEN")
-if not TG_API_TOKEN:
-    logger.warning("TG_API_TOKEN must be set as environment var. Otherwise, app would not work!")
-HOSTNAME = os.environ.get("HOSTNAME")
