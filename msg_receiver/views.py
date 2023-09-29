@@ -1,5 +1,4 @@
-import datetime
-
+from django.utils import timezone
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -19,7 +18,7 @@ class ReceiverView(APIView):
         serializer = MessageSerializer(data=request.data)
         if serializer.is_valid():
             data = serializer.validated_data
-            now = datetime.datetime.now()  # timezone
+            now = timezone.now()
             user = request.user
             serializer.save(sent_at=now, sender=user)
             tg_id = user.telegram_id
@@ -30,7 +29,7 @@ class ReceiverView(APIView):
                 f"{data['text']}",
                 tg_id
             )
-            return Response("hello")
+            return Response(status=200)
         else:
             return Response(status=400)
 
