@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "users",
     "msg_receiver",
+    "telegram_bot",
 ]
 
 MIDDLEWARE = [
