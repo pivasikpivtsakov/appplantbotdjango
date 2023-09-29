@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 import logging
 
+import dj_database_url
+
 logger = logging.getLogger(__name__)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,10 +31,10 @@ SECRET_KEY = 'django-insecure-q4jg951onuhpq_osta3-zl=m51_!phv#e^xp0=g2x8o*xcg4(6
 DEBUG = True
 
 # telegram
-TG_API_TOKEN = os.environ.get("TG_API_TOKEN")
+TG_API_TOKEN = os.environ.get('TG_API_TOKEN')
 if not TG_API_TOKEN:
-    logger.warning("TG_API_TOKEN must be set as environment var. Otherwise, app would not work!")
-HOSTNAME = os.environ.get("HOSTNAME")
+    logger.warning('TG_API_TOKEN must be set as environment var. Otherwise, app would not work!')
+HOSTNAME = os.environ.get('HOSTNAME')
 
 ALLOWED_HOSTS = [
     HOSTNAME,
@@ -49,11 +51,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "users",
-    "msg_receiver",
-    "telegram_bot",
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'users',
+    'msg_receiver',
+    'telegram_bot',
 ]
 
 MIDDLEWARE = [
@@ -90,12 +92,12 @@ WSGI_APPLICATION = 'appplantbotdjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+try:
+    from .settings_local import DATABASES
+except ImportError:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -115,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "users.CustomUser"
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
