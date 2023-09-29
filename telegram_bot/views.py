@@ -42,6 +42,11 @@ class TgWebhookView(APIView):
                                 "Логин установлен. Теперь введите токен",
                                 chat_id,
                             )
+                        else:
+                            msg_sending_result = send_to_tg_bot(
+                                "Такой пользователь не зарегистрирован. "
+                                "Пожалуйста, пройдите регистрацию через сервис. "
+                            )
                     else:
                         if user.user_token is None:
                             user.telegram_id = chat_id
