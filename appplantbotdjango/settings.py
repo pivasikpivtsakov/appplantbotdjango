@@ -38,6 +38,8 @@ ALLOWED_HOSTS = [
     HOSTNAME,
 ]
 
+APPEND_SLASH = False
+
 # Application definition
 
 INSTALLED_APPS = [
