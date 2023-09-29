@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class TgWebhookView(APIView):
     def post(self, request: Request):
+        logger.info(f"received update from telegram: {request.data}")
         update = telegram_api.models.Update.drf_serializer(data=request.data)
         if update.is_valid():
             data = update.validated_data
