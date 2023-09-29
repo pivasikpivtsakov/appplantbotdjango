@@ -45,7 +45,8 @@ class TgWebhookView(APIView):
                         else:
                             msg_sending_result = send_to_tg_bot(
                                 "Такой пользователь не зарегистрирован. "
-                                "Пожалуйста, пройдите регистрацию через сервис. "
+                                "Пожалуйста, пройдите регистрацию через сервис. ",
+                                chat_id,
                             )
                     else:
                         if user.user_token is None:
