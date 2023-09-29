@@ -8,7 +8,8 @@ class MessageSerializer(serializers.ModelSerializer):
         model = MessageHistory
         fields = ("message", )
         extra_kwargs = {
-            "sent_at": {}
+            "sent_at": {},
+            "sender": {}
         }
 
     message = serializers.CharField(

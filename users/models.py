@@ -27,7 +27,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     user_token = models.CharField(verbose_name="user token", null=True, max_length=100)
-    telegram_id = models.IntegerField()
+    telegram_id = models.IntegerField(null=True)
 
     objects = AccountManager()
 

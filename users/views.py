@@ -1,7 +1,8 @@
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from users.serializers import SignUpSerializer, UserProfileSerializer
+from users.serializers import SignUpSerializer, UserProfileSerializer, TgTokenSetupSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -24,12 +25,12 @@ class RegisterView(APIView):
         serializer = SignUpSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(data={'email': serializer.data['email']}, status=status.HTTP_201_CREATED)
+            return Response(data={'login': serializer.data['login']}, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserProfileView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         try:
@@ -41,5 +42,12 @@ class UserProfileView(APIView):
 
 
 class CreateTelegramTokenView(APIView):
-    def post(self, request: Request):
+    authentication_classes = (JWTAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request: Request) -> Response:
+        user = request.user
+        serializer = TgTokenSetupSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
         return Response(status=200)

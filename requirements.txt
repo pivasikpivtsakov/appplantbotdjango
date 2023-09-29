@@ -5,3 +5,4 @@ djangorestframework-simplejwt==5.3.0
 pydantic==1.10.12
 gunicorn==21.2.0
 httpx==0.25.0
+drf_pydantic==0.5.0

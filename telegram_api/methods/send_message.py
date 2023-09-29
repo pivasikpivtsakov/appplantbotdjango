@@ -2,7 +2,7 @@ from ..utils import make_tg_request, Method, FormDataModel
 
 
 class Body(FormDataModel):
-    chat_id: str | int
+    chat_id: int
     text: str
 
 

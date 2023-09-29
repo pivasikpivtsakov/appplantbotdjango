@@ -1,6 +1,6 @@
 import json
 
-from pydantic import BaseModel
+from drf_pydantic import BaseModel
 
 
 class FormDataModel(BaseModel):
