@@ -34,11 +34,14 @@ class TgWebhookView(APIView):
                 else:
                     user = CustomUser.objects.filter(telegram_id=chat_id).first()
                     if not user:
-
-                        msg_sending_result = send_to_tg_bot(
-                            "Логин установлен. Теперь введите токен",
-                            chat_id,
-                        )
+                        user_by_login = CustomUser.objects.filter(login=msg_text).first()
+                        if user_by_login:
+                            user_by_login.telegram_id = chat_id
+                            user_by_login.save()
+                            msg_sending_result = send_to_tg_bot(
+                                "Логин установлен. Теперь введите токен",
+                                chat_id,
+                            )
                     else:
                         if user.user_token is None:
                             user.telegram_id = chat_id
