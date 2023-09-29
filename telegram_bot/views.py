@@ -27,10 +27,12 @@ class TgWebhookView(APIView):
                         chat_id,
                     )
                     if msg_sending_result["ok"] is False:
-                        logger.warning(f"something bad when sending message to tg: {msg_sending_result} chat id: {chat_id}")
+                        logger.warning(
+                            f"something bad when sending message to tg: {msg_sending_result} chat id: {chat_id}"
+                        )
                         return Response(status=400, data={"telegram_error_text": msg_sending_result["description"]})
                 else:
-                    user = CustomUser.objects.get(telegram_id=chat_id)
+                    user = CustomUser.objects.filter(telegram_id=chat_id).first()
                     if not user:
 
                         msg_sending_result = send_to_tg_bot(
