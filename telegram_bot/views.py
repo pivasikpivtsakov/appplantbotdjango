@@ -49,13 +49,24 @@ class TgWebhookView(APIView):
                                 chat_id,
                             )
                     else:
-                        if user.user_token is None:
-                            user.telegram_id = chat_id
-                            user.save()
+                        if not user.user_token:
                             msg_sending_result = send_to_tg_bot(
-                                "Токен установлен. Бот успешно настроен на прием сообщений!",
-                                chat_id
+                                "Сначала нужно задать токен в сервисе! ",
+                                chat_id,
                             )
+                        else:
+                            if user.user_token == msg_text:
+                                user.user_token_verified = True
+                                user.save()
+                                msg_sending_result = send_to_tg_bot(
+                                    "Токен установлен. Бот успешно настроен на прием сообщений!",
+                                    chat_id,
+                                )
+                            else:
+                                msg_sending_result = send_to_tg_bot(
+                                    "Токен не совпадает, попробуйте ещё раз.",
+                                    chat_id,
+                                )
         else:
             logger.warning("update incorrect")
         return Response(status=200)

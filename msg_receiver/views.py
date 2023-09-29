@@ -1,5 +1,4 @@
 import datetime
-import time
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
@@ -10,7 +9,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from msg_receiver.models import MessageHistory
 from msg_receiver.serializers import MessageSerializer
 from telegram_methods import send_to_tg_bot
-from users.models import CustomUser
 
 
 class ReceiverView(APIView):
@@ -27,7 +25,11 @@ class ReceiverView(APIView):
             tg_id = user.telegram_id
             if tg_id is None:
                 return Response(status=400, data="Connect via telegram bot first!")
-            send_to_tg_bot(data["text"], tg_id)
+            send_to_tg_bot(
+                f"{user.screen_name}, я получил от тебя сообщение:\n"
+                f"{data['text']}",
+                tg_id
+            )
             return Response("hello")
         else:
             return Response(status=400)
