@@ -38,8 +38,8 @@ class ListMessagesView(APIView):
     authentication_classes = (JWTAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request: Request):
+    def get(self, request: Request) -> Response:
         user = request.user
         messages = MessageHistory.objects.filter(sender=user)
         serializer = MessageOutSerializer(messages, many=True)
-        return serializer.data
+        return Response(data=serializer.data)
