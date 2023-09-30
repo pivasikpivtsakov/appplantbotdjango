@@ -28,10 +28,11 @@ class TgWebhookView(APIView):
     def _process_message(self, msg_text: str, chat_id: int):
         user_by_tg_id: CustomUser = CustomUser.objects.filter(telegram_id=chat_id).first()
         if msg_text == "/start":
-            user_by_tg_id.telegram_id = None
-            user_by_tg_id.user_token = None
-            user_by_tg_id.user_token_verified = False
-            user_by_tg_id.save()
+            if user_by_tg_id:
+                user_by_tg_id.telegram_id = None
+                user_by_tg_id.user_token = None
+                user_by_tg_id.user_token_verified = False
+                user_by_tg_id.save()
             msg_sending_result = send_to_tg_bot(
                 "Добрый день! "
                 "Пожалуйста, введите ваш логин, чтобы связать бота с сервисом и начать получать сообщения.",
