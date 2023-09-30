@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from msg_receiver.models import MessageHistory
-from msg_receiver.serializers import MessageSerializer
+from msg_receiver.serializers import MessageSerializer, MessageOutSerializer
 from telegram_methods import send_to_tg_bot
 
 
@@ -39,4 +39,7 @@ class ListMessagesView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request: Request):
-        return MessageHistory.objects.all()
+        user = request.user
+        messages = MessageHistory.objects.filter(sender=user)
+        serializer = MessageOutSerializer(messages, many=True)
+        return serializer.data

@@ -15,3 +15,13 @@ class MessageSerializer(serializers.ModelSerializer):
     message = serializers.CharField(
         source="text", required=True, allow_blank=False, allow_null=False, max_length=4096,
     )
+
+
+class MessageOutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MessageHistory
+        fields = ("message", "sent_at")
+
+    message = serializers.CharField(
+        source="text",
+    )
