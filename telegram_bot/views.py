@@ -26,16 +26,20 @@ class TgWebhookView(APIView):
         return Response(status=200)
 
     def _process_message(self, msg_text: str, chat_id: int):
+        user_by_tg_id: CustomUser = CustomUser.objects.filter(telegram_id=chat_id).first()
         if msg_text == "/start":
+            user_by_tg_id.telegram_id = None
+            user_by_tg_id.user_token = None
+            user_by_tg_id.user_token_verified = False
+            user_by_tg_id.save()
             msg_sending_result = send_to_tg_bot(
                 "Добрый день! "
                 "Пожалуйста, введите ваш логин, чтобы связать бота с сервисом и начать получать сообщения.",
                 chat_id,
             )
         else:
-            user = CustomUser.objects.filter(telegram_id=chat_id).first()
-            if not user:
-                user_by_login = CustomUser.objects.filter(login=msg_text).first()
+            if not user_by_tg_id:
+                user_by_login: CustomUser = CustomUser.objects.filter(login=msg_text).first()
                 if user_by_login:
                     user_by_login.telegram_id = chat_id
                     user_by_login.save()
@@ -50,21 +54,29 @@ class TgWebhookView(APIView):
                         chat_id,
                     )
             else:
-                if not user.user_token:
+                if not user_by_tg_id.user_token:
                     msg_sending_result = send_to_tg_bot(
                         "Сначала нужно задать токен в сервисе! ",
                         chat_id,
                     )
                 else:
-                    if user.user_token == msg_text:
-                        user.user_token_verified = True
-                        user.save()
+                    if user_by_tg_id.user_token_verified:
                         msg_sending_result = send_to_tg_bot(
-                            "Токен установлен. Бот успешно настроен на прием сообщений!",
+                            "Токен уже установлен! "
+                            "Напишите /start ещё раз, если хотите сбросить настройки бота. ",
                             chat_id,
                         )
                     else:
-                        msg_sending_result = send_to_tg_bot(
-                            "Токен не совпадает, попробуйте ещё раз.",
-                            chat_id,
-                        )
+                        if user_by_tg_id.user_token == msg_text:
+                            user_by_tg_id.user_token_verified = True
+                            user_by_tg_id.save()
+                            msg_sending_result = send_to_tg_bot(
+                                "Токен установлен. Бот успешно настроен на прием сообщений! "
+                                "Напишите /start ещё раз, если хотите сбросить настройки бота. ",
+                                chat_id,
+                            )
+                        else:
+                            msg_sending_result = send_to_tg_bot(
+                                "Токен не совпадает, попробуйте ещё раз.",
+                                chat_id,
+                            )
