@@ -8,6 +8,5 @@ urlpatterns = [
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("token/verify/", TokenVerifyView.as_view(), name="token_verify"),
     path("signup/", views.RegisterView.as_view()),
-    path("profile/", views.UserProfileView.as_view()),
     path("usertoken/", views.CreateTelegramTokenView.as_view()),
 ]
