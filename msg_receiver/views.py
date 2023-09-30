@@ -24,6 +24,8 @@ class ReceiverView(APIView):
             tg_id = user.telegram_id
             if tg_id is None:
                 return Response(status=400, data="Connect via telegram bot first!")
+            if user.user_token_verified is False:
+                return Response(status=400, data="token verification failed")
             send_to_tg_bot(
                 f"{user.screen_name}, я получил от тебя сообщение:\n"
                 f"{data['text']}",
